@@ -1,14 +1,12 @@
 name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
   CI:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - name: "Checkout"
         uses: "actions/checkout@v4"
       - name: "Install Requirements"
         run: pip install -r requirements.txt
-      - name: "Run Test"
-        run: pytest test_sample.py
+      - name: "Run Tests"
+        run: pytest
