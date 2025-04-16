@@ -8,4 +8,7 @@ jobs:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - name: "Checkout"
         uses: "actions/checkout@v4"
-      - run: pip install -r requirements.txt
+      - name: "Install Requirements"
+        run: pip install -r requirements.txt
+      - name: "Run Test"
+        run: pytest test_sample.py
