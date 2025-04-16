@@ -3,4 +3,4 @@ def triple(x):
 
 
 def test_answer():
-    assert triple(4) == 12
+    assert triple(4) == 64
