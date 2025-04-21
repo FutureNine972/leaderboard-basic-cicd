@@ -12,3 +12,5 @@ instance/
 .pytest_cache/
 build/
 *.egg-info/
+flask.log
+flask.pid
