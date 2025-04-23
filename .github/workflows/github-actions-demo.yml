@@ -36,7 +36,7 @@ jobs:
           ls -la
 
       - name: "Deploy Files"
-        run: scp -i aws.key __init__.py requirements.txt "$DEPLOY_HOST"
+        run: scp -i aws.key __init__.py requirements.txt scripts/restart.sh "$DEPLOY_HOST"
 
       - name: "Install Pip"
         run: |
