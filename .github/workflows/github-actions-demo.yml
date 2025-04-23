@@ -31,4 +31,4 @@ jobs:
           ls -la
 
       - name: "Deploy Files"
-        run: scp -i aws.key __init__.py requirements.txt ubuntu@3.14.130.103:/home/ubuntu/deploy
+        run: scp -o StrictHostKeyChecking=accept-new -i aws.key __init__.py requirements.txt ubuntu@${{ vars.AWS_IP }}:/home/ubuntu/deploy
