@@ -45,3 +45,7 @@ jobs:
       - name: "Install Dependencies"
         run: |
           ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'cd /home/ubuntu/deploy && pip install -r requirements.txt --break-system-packages'
+
+      - name: "Restart Flask"
+        run: |
+          ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'cd /home/ubuntu/deploy && ./restart.sh'
