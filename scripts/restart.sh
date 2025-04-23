@@ -17,6 +17,8 @@ fi
 
 echo "Starting new process"
 
+export PATH="$PATH:/home/ubuntu/.local/bin"
+
 nohup flask --app __init__ --port=80 --host=0.0.0.0 run > flask.log 2>&1 &
 echo $! > $FILE_NAME
 
