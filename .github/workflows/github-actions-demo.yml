@@ -23,4 +23,4 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: "Debug"
-        run: echo $AWS_IP
+        run: echo ${{ vars.AWS_IP }}
