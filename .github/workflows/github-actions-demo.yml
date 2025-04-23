@@ -39,5 +39,5 @@ jobs:
 
       - name: "Install Dependencies"
         run: |
-          ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'sudo apt install python3-pip'
+          ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'sudo apt install python3-pip -y'
           ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'pip install -r requirements.txt'
