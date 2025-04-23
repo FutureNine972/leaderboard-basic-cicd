@@ -26,6 +26,7 @@ jobs:
         run: |
           echo "${{ secrets.AWS_KEY }}" > aws.key
           chmod 0600 aws.key
+          mkdir ~/.ssh
           ssh-keyscan -H ${{ vars.AWS_IP }} > ~/.ssh/known_hosts
 
       - name: "Debug"
