@@ -17,7 +17,7 @@ fi
 
 echo "Starting new process"
 
-nohup flask --app __init__ run > flask.log 2>&1 &
+nohup flask --app __init__ --port=80 --host=0.0.0.0 run > flask.log 2>&1 &
 echo $! > $FILE_NAME
 
 echo "Process started successfully"
