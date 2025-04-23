@@ -42,4 +42,4 @@ jobs:
       
       - name: "Install Dependencies"
         run: |
-          ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'pip install -r requirements.txt'
+          ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'pip install -r requirements.txt --break-system-packages'
