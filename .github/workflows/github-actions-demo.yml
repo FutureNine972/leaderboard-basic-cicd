@@ -23,7 +23,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: "Create AWS Key File"
-        run: echo ${{ secrets.AWS_KEY }} > aws.key
+        run: echo "${{ secrets.AWS_KEY }}" > aws.key
 
       - name: "Debug"
         run: |
