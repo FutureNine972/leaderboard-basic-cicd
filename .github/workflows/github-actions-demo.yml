@@ -14,13 +14,12 @@ jobs:
         run: pytest
   CD:
     runs-on: ubuntu-latest
+    needs:
+      - "CI"
     # if: github.ref == 'refs/heads/main'
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v4"
-
-      - name: "Install Requirements"
-        run: pip install -r requirements.txt
 
       - name: "Create AWS Key File"
         run: |
@@ -37,7 +36,10 @@ jobs:
       - name: "Deploy Files"
         run: scp -i aws.key __init__.py requirements.txt ubuntu@${{ vars.AWS_IP }}:/home/ubuntu/deploy
 
-      - name: "Install Dependencies"
+      - name: "Install Pip"
         run: |
           ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'sudo apt install python3-pip -y'
+      
+      - name: "Install Dependencies"
+        run: |
           ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'pip install -r requirements.txt'
