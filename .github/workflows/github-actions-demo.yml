@@ -26,6 +26,7 @@ jobs:
         run: |
           echo "${{ secrets.AWS_KEY }}" > aws.key
           chmod 0600 aws.key
+          ssh-keyscan -H ${{ vars.AWS_IP }} >> ~/.ssh/known_hosts
 
       - name: "Debug"
         run: |
@@ -33,4 +34,9 @@ jobs:
           ls -la
 
       - name: "Deploy Files"
-        run: scp -o StrictHostKeyChecking=accept-new -i aws.key __init__.py requirements.txt ubuntu@${{ vars.AWS_IP }}:/home/ubuntu/deploy
+        run: scp -i aws.key __init__.py requirements.txt ubuntu@${{ vars.AWS_IP }}:/home/ubuntu/deploy
+
+      - name: "Install Dependencies"
+        run: |
+          ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'sudo apt install python3-pip'
+          ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'pip install -r requirements.txt'
