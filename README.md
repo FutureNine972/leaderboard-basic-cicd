@@ -6,43 +6,62 @@ This is one of the many repos used to display my progress on web dev.
 
 This repo is moreso intended to guide me through deployment stuff rather than actually coding websites (because I already have those basic tools down).
 
-Cd into `/basic_cicd` and:
-* Make the virtual environment with `python3 -m venv .venv`
-* `pip install requirements.txt`
-* Run `./scripts/run.sh` to run the app.
+NEW: Learned how to deploy through GitHub Actions
 
-The alternative to running the script would be:
-* `source .venv/bin/activate`
-* `flask --app __init__ run`
+#### `github-actions-demo.yml`
 
-#### `restart.sh`
+``` yml
+name: GitHub Actions Demo
+on: [push]
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
 
-``` shell
-#!/usr/bin/env bash
+      - name: "Install Requirements"
+        run: pip install -r requirements.txt
 
-# For GitHub actions to restart the server when deploy new code
+      - name: "Run Tests"
+        run: pytest
+  CD:
+    runs-on: ubuntu-latest
+    # needs:
+    #   - "CI"
+    env:
+      DEPLOY_HOST: ubuntu@${{ vars.AWS_IP }}:/home/ubuntu/deploy
+    # if: github.ref == 'refs/heads/main'
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
 
-FILE_NAME="./flask.pid"
+      - name: "Create AWS Key File"
+        run: |
+          echo "${{ secrets.AWS_KEY }}" > aws.key
+          chmod 0600 aws.key
+          mkdir ~/.ssh
+          ssh-keyscan -H ${{ vars.AWS_IP }} > ~/.ssh/known_hosts
 
-if [ -f "$FILE_NAME" ]; then
-    echo "Found existing process, killing now"
+      - name: "Debug"
+        run: |
+          echo ${{ vars.AWS_IP }}
+          ls -la
 
-    # Try to kill last started process, if doesn't exist then shut up
-    kill $(cat "$FILE_NAME") || true
+      - name: "Deploy Files"
+        run: scp -i aws.key __init__.py requirements.txt scripts/restart.sh "$DEPLOY_HOST"
 
-    rm "$FILE_NAME"
+      - name: "Install Pip"
+        run: |
+          ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'sudo apt install python3-pip -y'
+      
+      - name: "Install Dependencies"
+        run: |
+          ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'cd /home/ubuntu/deploy && pip install -r requirements.txt --break-system-packages'
 
-    echo "Cleanup complete"
-fi
-
-echo "Starting new process"
-
-nohup flask --app __init__ run > flask.log 2>&1 &
-echo $! > $FILE_NAME
-
-echo "Process started successfully"
+      - name: "Restart Flask"
+        run: |
+          ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'cd /home/ubuntu/deploy && ./restart.sh'
 ```
-
-Take the IP address and add '/hello' to the link as that's where the main page is.
 
 This is very easy to run but there isn't really a reason to. See my [frontend](https://github.com/FutureNine972/leaderboard-basic-vue) repo for my leaderboard project (which also requires the [backend](https://github.com/FutureNine972/leaderboard-basic-flask)) for a much better Flask experience.
