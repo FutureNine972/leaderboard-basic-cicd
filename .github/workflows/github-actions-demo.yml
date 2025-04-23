@@ -40,8 +40,8 @@ jobs:
 
       - name: "Install Pip"
         run: |
-          ssh -i aws.key "$DEPLOY_HOST" 'sudo apt install python3-pip -y'
+          ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'sudo apt install python3-pip -y'
       
       - name: "Install Dependencies"
         run: |
-          ssh -i aws.key "$DEPLOY_HOST" 'pip install -r requirements.txt --break-system-packages'
+          ssh -i aws.key ubuntu@${{ vars.AWS_IP }} 'cd /home/ubuntu/deploy && pip install -r requirements.txt --break-system-packages'
